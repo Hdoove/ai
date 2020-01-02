@@ -10,6 +10,7 @@ class App extends Component {
 
   config: Taro.Config = {
     pages: [
+      'pages/Welcome/index',
       'pages/Home/index',
       'pages/User/index',
       'pages/Detail/index'
@@ -17,14 +18,14 @@ class App extends Component {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'AI识万物',
+      navigationBarTitleText: 'AI小助手',
       navigationBarTextStyle: 'black',
       onReachBottomDistance: 50
     },
     tabBar: {
       borderStyle: "white",
-      selectedColor: "#E60000",
-      backgroundColor: "#ffffff",
+      selectedColor: "#000",
+      backgroundColor: "#fff",
       color: "#bfbfbf",
       list: [
         {

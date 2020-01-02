@@ -9,6 +9,7 @@ import './index.less';
 const Detail = () => {
 
     const [data, setData] = useState([]);
+    const [path, setPath] = useState<string>('');
 
     const router = useRouter();
     const { userinfo } = useSelector(data => data.user);
@@ -34,10 +35,10 @@ const Detail = () => {
         })
     }
 
-    function transformBase64(res) {
+    function transformBase64(path) {
         const FSM = Taro.getFileSystemManager();
         FSM.readFile({
-            filePath: res,
+            filePath: path,
             encoding: "base64",
             success: function (data) {
                 api.post(
@@ -94,6 +95,7 @@ const Detail = () => {
                         dispatch(actions.setUserInfo({ ...userinfo, success, fail, all: userinfo.all + 1 }));
 
                         Taro.hideLoading();
+                        setPath(path);
                     })
             }
         });
@@ -101,21 +103,38 @@ const Detail = () => {
 
     return (
         <View className='detail'>
-            <View onClick={phone} className="phone">
-                <Image src={carams} className="carams" />
-                <Text className="text">识别{name}</Text>
-            </View>
-            <View>
-                {
-                    data.length > 0 && data.map((item: { name: string, score: number }) => {
-                        return (
-                            <View key={item.name} className="data">
-                                <Text className="name" >{item.name}</Text><Text className="score"> {(item.score * 100).toFixed(2)}% </Text>
-                            </View>
-                        )
-                    })
-                }
-            </View>
+
+            {
+                data.length > 0 ? <View>
+                    <View>
+                        <Image src={path} style={{ display: 'block', margin: '5vh auto 0' }} />
+                        {
+                            data.length > 0 && data.map((item: { name: string, score: number }) => {
+                                const score = (item.score * 100).toFixed(2);
+                                return (
+
+                                    <View key={item.name} className="data">
+                                        <Text className="name" >{item.name}</Text>
+                                        <Text className="score"> {score}% </Text>
+                                        <View className="process">
+                                            <View className="processBody" style={{ width: score + '%' }} />
+                                        </View>
+                                    </View>
+                                )
+                            })
+                        }
+                        <View style={{ height: '15vh' }} ></View>
+                    </View>
+                    <View className="footer">
+                        <View onClick={phone} className="phone">
+                            <Image src={carams} className="carams" />
+                            <Text className="text">识别{name}</Text>
+                        </View>
+                    </View>
+                </View> : <View className="canPhone"  onClick={phone}>
+                        <Image src={carams} className="carams" />
+                    </View>
+            }
         </View >
     )
 }
