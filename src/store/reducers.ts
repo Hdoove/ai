@@ -5,6 +5,7 @@ import actions from './actions';
 
 const defaultState = Immutable({
     userinfo: {
+        id: '',
         status: 0, // 0 未提示 1已提示但未授权 2已授权
         name: '',
         picture: '',

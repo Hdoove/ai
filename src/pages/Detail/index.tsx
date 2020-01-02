@@ -1,7 +1,9 @@
 import Taro, { useState, useRouter } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import carams from '../../asset/phone.png';
+import { useDispatch, useSelector } from '@tarojs/redux';
 import api from '../../apis';
+import actions from '../../store/actions';
 import './index.less';
 
 const Detail = () => {
@@ -9,6 +11,8 @@ const Detail = () => {
     const [data, setData] = useState([]);
 
     const router = useRouter();
+    const { userinfo } = useSelector(data => data.user);
+    const dispatch = useDispatch();
 
     const { text, name } = router.params;
 
@@ -41,10 +45,13 @@ const Detail = () => {
                         url: `https://aip.baidubce.com/rest/2.0/image-classify${text}?access_token=24.edad8f469e819436d3dad37098eb0baa.2592000.1580528232.282335-14954581`,
                         data: { image: data.data, baike_num: 1 }
                     }).then(res => {
+                        let update_user = '';
+                        let success = userinfo.success;
+                        let fail = userinfo.fail;
                         if (res.data.result) {
                             switch (name) {
                                 case '通用':
-                                    console.log(1);
+                                    setData(res.data.result.map(item => ({ name: item.keyword, score: item.score, baike_info: item.baike_info || {} })));
                                     break;
                                 case '动物':
                                     setData(res.data.result);
@@ -65,12 +72,26 @@ const Detail = () => {
                                     setData(res.data.result.map(item => ({ name: item.name, score: item.probability, baike_info: item.baike_info || {} })));
                                     break;
                             }
+                            update_user = `mutation {
+                                    updateAI(id: "${userinfo.id}", data: { all: ${userinfo.all + 1}, success: ${userinfo.success + 1} }) {
+                                        id,
+                                        name,
+                                        success
+                                    }
+                            }`;
+                            success += 1;
+                        } else {
+                            update_user = `mutation {
+                                    updateAI(id: "${userinfo.id}", data: { all: ${userinfo.all + 1}, fail: ${userinfo.fail + 1} }) {
+                                    id,
+                                    name,
+                                    success
+                                }
+                            }`;
+                            fail += 1;
                         }
-                        const add_user = `mutation {
-                            createAI(data: { name: "Mike", success: 0, fail: 0, all: 0 }) {
-                              id
-                            }
-                          }`;
+                        api.graphql({ url: '', data: update_user });
+                        dispatch(actions.setUserInfo({ ...userinfo, success, fail, all: userinfo.all + 1 }));
 
                         Taro.hideLoading();
                     })

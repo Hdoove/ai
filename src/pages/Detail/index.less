@@ -25,16 +25,20 @@
         padding: 1vh;
         border-radius: 1rem;
         display: flex;
-        justify-content: space-around;
+        align-items: center;
         margin: 1vh;
-
+        position: relative;
+        height: 3vh;
         color: #fff;
 
-        .name {}
+        .name {
+            position: absolute;
+            left: 10%;
+        }
 
         .score {
-            min-width: 10vw;
-            display: inline-block;
+            position: absolute;
+            right: 10%;
         }
     }
 }

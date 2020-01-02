@@ -3,6 +3,7 @@ import { View, Text, Image } from '@tarojs/components';
 import { useSelector, useDispatch } from '@tarojs/redux';
 import ai from '../../asset/ai.png';
 import actions from '../../store/actions';
+import api from '../../apis';
 import './index.less';
 
 const classify = {
@@ -29,6 +30,31 @@ const Index = () => {
           Taro.getUserInfo({
             success: res => {
               dispatch(actions.setUserInfo({ ...userinfo, status: 2, name: res.userInfo.nickName, picture: res.userInfo.avatarUrl }));
+              const get_user = `query{
+                allAIS(where: { name: "${res.userInfo.nickName}" }) {
+                    id,
+                    name,
+                    success,
+                    all,
+                    fail
+                  }
+              }`;
+              api.graphql({ url: '', data: get_user }).then(data => {
+                const { allAIS } = data.data.data;
+                if (allAIS.length === 0) {
+                  const add_user = `mutation {
+                        createAI(data: { name: "${name}", success: 0, fail: 0, all: 0 }) {
+                          id
+                        }
+                      }`;
+
+                  api.graphql({ url: '', data: add_user });
+                } else {
+                  const thisData = allAIS[0];
+                  console.log(userinfo);
+                  dispatch(actions.setUserInfo({ ...userinfo, status: 2, name: res.userInfo.nickName, picture: res.userInfo.avatarUrl id: thisData.id, success: thisData.success, fail: thisData.fail, all: thisData.all }));
+                }
+              });
             }
           });
         }

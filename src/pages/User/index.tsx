@@ -16,6 +16,7 @@ const User = () => {
     function addData(name) {
         const get_user = `query{
             allAIS(where: { name: "${name}" }) {
+                id,
                 name,
                 success,
                 all,
@@ -39,10 +40,6 @@ const User = () => {
             }
         });
     }
-
-    useEffect(() => {
-        addData(userinfo.name);
-    }, []);
 
     // Taro.showLoading({
     //     title: '获取用户信息中...',
