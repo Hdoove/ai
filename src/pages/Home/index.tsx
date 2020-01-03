@@ -18,12 +18,12 @@ const classify = {
     url: '/v2/advanced_general',
     png: tongyong
   },
-  '动物': { url: '/v1/animal', png: dongwu},
-  '植物':{ url: '/v1/plant', png: zhiwu},
-  'logo': { url: '/v2/logo', png: logo},
-  '果蔬': { url: '/ingredient', png: guoshu},
-  '地标': { url: '/v1/landmark', png: dibiao},
-  '菜品': { url: '/v2/dish', png: caipin},
+  '动物': { url: '/v1/animal', png: dongwu },
+  '植物': { url: '/v1/plant', png: zhiwu },
+  'logo': { url: '/v2/logo', png: logo },
+  '果蔬': { url: '/v1/classify/ingredient', png: guoshu },
+  '地标': { url: '/v1/landmark', png: dibiao },
+  '菜品': { url: '/v2/dish', png: caipin },
 }
 
 const Index = () => {
@@ -71,7 +71,7 @@ const Index = () => {
               });
             }
           });
-        }else {
+        } else {
           Taro.hideLoading();
         }
       }
@@ -97,8 +97,6 @@ const Index = () => {
       });
     }
   }
-
-  console.log(classify);
 
   return (
     <View className='index'>

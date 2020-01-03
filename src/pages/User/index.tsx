@@ -54,7 +54,7 @@ const User = () => {
         }
     }
 
-    Taro.setNavigationBarTitle({ title: '我的' });
+    Taro.setNavigationBarTitle({ title: 'AI小助手' });
 
     return (
         <View className='user'>

@@ -1,15 +1,19 @@
 import Taro, { useState, useRouter } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import carams from '../../asset/phone.png';
+import xiangji from '../../asset/xiangji.png';
 import { useDispatch, useSelector } from '@tarojs/redux';
 import api from '../../apis';
 import actions from '../../store/actions';
+import { AtFloatLayout } from "taro-ui"
 import './index.less';
 
 const Detail = () => {
 
     const [data, setData] = useState([]);
     const [path, setPath] = useState<string>('');
+    const [chooseItem, setChooseItem] = useState<{ name: string, baike_info: { description: string } }>({ name: '', baike_info: { description: '' } });
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const router = useRouter();
     const { userinfo } = useSelector(data => data.user);
@@ -101,15 +105,23 @@ const Detail = () => {
         });
     }
 
+    function handleShowMore(item) {
+        setChooseItem(item);
+        setIsOpen(true);
+    }
+
     return (
         <View className='detail'>
-
+            <AtFloatLayout isOpened={isOpen} title={chooseItem.name} scrollY={true} onClose={() => setIsOpen(false)}>
+                <View style={{ width: '100%', textAlign: 'center', padding: '1vh 0' }}>百度百科</View>
+                {chooseItem.baike_info.description}
+            </AtFloatLayout>
             {
                 data.length > 0 ? <View>
                     <View>
                         <Image src={path} style={{ display: 'block', margin: '5vh auto 0' }} />
                         {
-                            data.length > 0 && data.map((item: { name: string, score: number }) => {
+                            data.length > 0 && data.map((item: { name: string, score: number, baike_info: any }) => {
                                 const score = (item.score * 100).toFixed(2);
                                 return (
 
@@ -119,6 +131,7 @@ const Detail = () => {
                                         <View className="process">
                                             <View className="processBody" style={{ width: score + '%' }} />
                                         </View>
+                                        <Text onClick={() => handleShowMore(item)} className="more" style={{ display: item.baike_info && item.baike_info.description ? '' : 'none' }}>详情</Text>
                                     </View>
                                 )
                             })
@@ -131,8 +144,8 @@ const Detail = () => {
                             <Text className="text">识别{name}</Text>
                         </View>
                     </View>
-                </View> : <View className="canPhone"  onClick={phone}>
-                        <Image src={carams} className="carams" />
+                </View> : <View className="canPhone" onClick={phone}>
+                        <Image src={xiangji} className="carams" />
                     </View>
             }
         </View >

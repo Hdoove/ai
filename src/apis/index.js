@@ -5,7 +5,7 @@ import {
 import {
   logError
 } from './logError';
-const base = 'http://101.200.191.21:3000/admin/api'
+const base = 'https://hdove.top/ai/api'
 export default {
   baseOptions(params, method = 'GET') {
     let {

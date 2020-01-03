@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import Index from './pages/Home/index';
 import { Provider } from '@tarojs/redux';
 import configStore from './store';
+import '../node_modules/taro-ui/dist/style/components/float-layout.scss';
 import './app.less';
 
 const store = configStore();
