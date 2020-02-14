@@ -13,7 +13,7 @@ const User = () => {
     const { userinfo } = useSelector(data => data.user);
     const dispatch = useDispatch();
 
-    function addData(name) {
+    function addData(name, pic) {
         const get_user = `query{
             allAIS(where: { name: "${name}" }) {
                 id,
@@ -34,23 +34,19 @@ const User = () => {
                   }`;
 
                 api.graphql({ url: '', data: add_user });
+                dispatch(actions.setUserInfo({ ...userinfo, status: 2, name, picture: pic }));
             } else {
                 const thisData = allAIS[0];
-                dispatch(actions.setUserInfo({ ...userinfo, success: thisData.success, fail: thisData.fail, all: thisData.all }));
+                dispatch(actions.setUserInfo({ ...userinfo, success: thisData.success, fail: thisData.fail, all: thisData.all, name, picture: pic, status: 2 }));
             }
         });
     }
 
-    // Taro.showLoading({
-    //     title: '获取用户信息中...',
-    //     mask: true
-    // });
-
     function bindGetUserInfo(e) {
         if (e.detail.userInfo) {
             const { nickName, avatarUrl } = e.detail.userInfo;
-            addData(nickName);
-            dispatch(actions.setUserInfo({ ...userinfo, status: 2, name: nickName, picture: avatarUrl }));
+            addData(nickName, avatarUrl);
+            // dispatch(actions.setUserInfo({ ...userinfo, status: 2, name: nickName, picture: avatarUrl }));
         }
     }
 
